@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "running-story-studio",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-08-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": { "enabled": true },
+  // Create with: wrangler d1 create running-story-studio  (then paste the id here)
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "running-story-studio",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  // Create with: wrangler r2 bucket create running-story-studio-media  (keep it private)
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "running-story-studio-media" }],
+  "vars": {
+    "MAX_UPLOAD_BYTES": "94371840"
+  }
+}

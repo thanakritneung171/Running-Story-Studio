@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "types": ["vite/client", "node"],
+    "noUnusedLocals": false,
+    "tsBuildInfoFile": "./node_modules/.tmp/test.tsbuildinfo"
+  },
+  "include": ["tests", "worker-tests", "src", "shared"]
+}
