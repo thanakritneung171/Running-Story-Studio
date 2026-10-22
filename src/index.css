@@ -1,0 +1,92 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-ink-950: #0b0c0f;
+  --color-ink-900: #111318;
+  --color-ink-850: #161920;
+  --color-ink-800: #1c2029;
+  --color-ink-700: #2a2f3a;
+  --color-ink-600: #3a4150;
+  --color-ink-400: #8a91a3;
+  --color-ink-300: #b4b9c6;
+  --color-ink-100: #eceef2;
+  --color-brand: #ff5a1f;
+  --color-brand-600: #e74b12;
+  --color-ok: #22c55e;
+  --color-warn: #f5b301;
+  --color-bad: #ef4444;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Bebas Neue', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  background: var(--color-ink-950);
+  color: var(--color-ink-100);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-ink-700 bg-ink-800 px-3 py-2 text-sm font-medium text-ink-100 transition hover:border-ink-600 hover:bg-ink-700 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply border-transparent bg-brand text-white hover:border-transparent hover:bg-brand-600;
+  }
+  .btn-ghost {
+    @apply border-transparent bg-transparent hover:bg-ink-800;
+  }
+  .btn-icon {
+    @apply h-8 w-8 p-0;
+  }
+  .input {
+    @apply w-full rounded-md border border-ink-700 bg-ink-900 px-2 py-1.5 text-sm text-ink-100 outline-none focus:border-brand;
+  }
+  .label {
+    @apply mb-1 block text-[11px] font-semibold tracking-wider text-ink-400 uppercase;
+  }
+  .panel {
+    @apply rounded-xl border border-ink-700 bg-ink-900;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-ink-700 px-2.5 py-1 text-xs;
+  }
+  /* Transparency grid. Dark on purpose: overlays are usually white text, which is invisible on a light grid. */
+  .checker {
+    background-color: #24272e;
+    background-image:
+      linear-gradient(45deg, #2f333b 25%, transparent 25%), linear-gradient(-45deg, #2f333b 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #2f333b 75%), linear-gradient(-45deg, transparent 75%, #2f333b 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+  }
+  .checker-light {
+    background-color: #f2f2f2;
+    background-image:
+      linear-gradient(45deg, #d9d9d9 25%, transparent 25%), linear-gradient(-45deg, #d9d9d9 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #d9d9d9 75%), linear-gradient(-45deg, transparent 75%, #d9d9d9 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+  }
+}
+
+input[type='range'] {
+  accent-color: var(--color-brand);
+}
+input[type='color'] {
+  @apply h-8 w-10 cursor-pointer rounded border border-ink-700 bg-transparent p-0.5;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-700);
+  border-radius: 4px;
+}

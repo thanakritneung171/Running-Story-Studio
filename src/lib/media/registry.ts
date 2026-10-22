@@ -18,9 +18,9 @@ class MediaRegistry {
   private pending = new Map<string, Promise<Entry | null>>();
   private listeners = new Set<() => void>();
 
-  onChange(fn: () => void) {
+  onChange(fn: () => void): () => void {
     this.listeners.add(fn);
-    return () => this.listeners.delete(fn);
+    return () => void this.listeners.delete(fn);
   }
   private emit() {
     this.listeners.forEach((f) => f());

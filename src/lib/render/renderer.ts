@@ -163,28 +163,42 @@ function drawStat(ctx: Ctx, l: LayerOf<'stat'>, doc: DesignDocument, opts: Rende
   const valueText = applyCase(l.showUnit && f?.unit && l.layout === 'inline' ? `${value} ${f.unit}` : value, l.valueStyle);
   const unitText = l.showUnit && f?.unit && l.layout !== 'inline' ? f.unit : '';
   const label = applyCase(l.label, l.labelStyle);
-  const vs = l.valueStyle;
   const ls = l.labelStyle;
   const labelH = l.showLabel ? ls.fontSize * ls.lineHeight : 0;
+  const isText = l.metric === 'name' || l.metric === 'location';
+  // Free-text values wrap; numeric values shrink to fit so they never overflow the tile.
+  let vs = l.valueStyle;
+  let valueLines = [valueText];
+  if (isText) valueLines = wrapLines(ctx, valueText, vs, l.width);
+  else {
+    const unitStyle0 = { ...vs, fontSize: vs.fontSize * 0.42, letterSpacing: 0 };
+    const w = unitText ? measureCombined(ctx, valueText, unitText, vs, unitStyle0).width : measureCombined(ctx, valueText, '', vs, unitStyle0).width - vs.fontSize * 0.12;
+    if (w > l.width && w > 0) {
+      const k = Math.max(0.3, l.width / w);
+      vs = { ...vs, fontSize: vs.fontSize * k, letterSpacing: vs.letterSpacing * k };
+    }
+  }
   const valueH = vs.fontSize * vs.lineHeight;
   let y = 0;
   if (l.showLabel && l.layout !== 'label-below') {
     drawLine(ctx, label, ls, 0, y, l.width);
     y += labelH;
   }
-  if (unitText) {
-    // Value with a smaller unit suffix
+  if (unitText && !isText) {
+    // Value with a smaller unit suffix sharing the same baseline.
     const unitStyle = { ...vs, fontSize: vs.fontSize * 0.42, letterSpacing: 0 };
-    const tmpAlign = vs.align;
     const { width: vw } = measureCombined(ctx, valueText, unitText, vs, unitStyle);
-    const startX = tmpAlign === 'left' ? 0 : tmpAlign === 'center' ? (l.width - vw) / 2 : l.width - vw;
+    const startX = vs.align === 'left' ? 0 : vs.align === 'center' ? (l.width - vw) / 2 : l.width - vw;
     const v = drawLine(ctx, valueText, { ...vs, align: 'left' }, startX, y, l.width - startX);
     const unitTop = y + (valueH - vs.fontSize) / 2 + vs.fontSize * 0.8 - unitStyle.fontSize * 0.8 - (unitStyle.fontSize * (vs.lineHeight - 1)) / 2;
     drawLine(ctx, unitText, { ...unitStyle, align: 'left', lineHeight: vs.lineHeight }, startX + v.width + vs.fontSize * 0.12, unitTop, l.width);
+    y += valueH;
   } else {
-    drawLine(ctx, valueText, vs, 0, y, l.width);
+    for (const line of valueLines) {
+      drawLine(ctx, line, vs, 0, y, l.width);
+      y += valueH;
+    }
   }
-  y += valueH;
   if (l.showLabel && l.layout === 'label-below') drawLine(ctx, label, ls, 0, y, l.width);
 }
 
